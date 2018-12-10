@@ -1,12 +1,13 @@
-import matplotlib.pyplot as plot
-import regression.kernels as kernels
-from regression.utils import makerange, makenoise
-from regression.nw_regression import nw_regression, loo as nw_loo
 import numpy as np
+import matplotlib.pyplot as plot
+
+import regression.kernels as kernels
+import regression.datasets as datasets
+from regression.nw_regression import nw_regression, loo as nw_loo
 
 size = 100
-xl = makerange(-2 * np.pi, 4 * np.pi, size)
-yl = np.sin(xl) + makenoise(-0.2, 0.2, size)
+data = datasets.sin_with_noise(-2 * np.pi, 4 * np.pi, size, noise=0.2)
+xl, yl = data['xl'], data['yl']
 
 plot.plot(xl, yl)
 plot.xlabel('x')
