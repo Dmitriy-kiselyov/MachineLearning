@@ -14,10 +14,8 @@ plot.xlabel('x')
 plot.ylabel('sin(x)')
 plot.show()
 
-def test_by_kernel(kernel):
-    hl = np.arange(0.1, 1, 0.05)
+def test_by_kernel(kernel, hl):
     h_errors = nw_loo(xl, yl, hl, kernel)
-    print('H errors', h_errors)
 
     min_i = np.argmin(h_errors)
     h_error = round(h_errors[min_i], 5)
@@ -30,5 +28,15 @@ def test_by_kernel(kernel):
     plot.ylabel('sin(x), mistake = ' + str(h_error))
     plot.show()
 
-test_by_kernel(kernels.gauss)
-test_by_kernel(kernels.quartic)
+    return h_errors
+
+hl = np.arange(0.1, 1.5, 0.05)
+h_gauss_errors = test_by_kernel(kernels.gauss, hl)
+h_quartic_errors = test_by_kernel(kernels.quartic, hl)
+
+plot.plot(hl, h_gauss_errors)
+plot.plot(hl, h_quartic_errors)
+plot.legend(['gauss', 'quartic'])
+plot.xlabel('h')
+plot.ylabel('SSE')
+plot.show()
