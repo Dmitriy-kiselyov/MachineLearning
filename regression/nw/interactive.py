@@ -1,32 +1,34 @@
 import numpy as np
 import matplotlib.pyplot as plot
+plot.rcParams['figure.figsize'] = (15, 6)
 
 import regression.kernels as kernels
 import regression.datasets as datasets
-from regression.nw_regression import nw_regression, loo as nw_loo
+from regression.nw.nw import nw_loo_estimate, calc_h_errors
 
-def test_nw_regression(size, fnName, noise):
-    data = getattr(datasets, fnName)(-2 * np.pi, 4 * np.pi, size, noise)
+
+def nw_interactive(size, fn_name, noise):
+    data = getattr(datasets, fn_name)(-2 * np.pi, 4 * np.pi, size, noise)
     xl, yl = data['xl'], data['yl']
 
     plot.plot(xl, yl)
     plot.xlabel('x')
-    plot.ylabel(fnName + '(x)')
+    plot.ylabel(fn_name + '(x)')
     plot.show()
 
-    def test_by_kernel(kernel, kernelName, hl):
-        h_errors = nw_loo(xl, yl, hl, kernel)
+    def test_by_kernel(kernel, kernel_name, hl):
+        h_errors = calc_h_errors(xl, yl, hl, kernel)
 
         min_i = np.argmin(h_errors)
         h_error = round(h_errors[min_i], 5)
         best_h = round(hl[min_i], 1)
-        yl_r = list(map(lambda x: nw_regression(x, xl, yl, best_h, kernel), xl))
+        yl_est = nw_loo_estimate(xl, yl, best_h, kernel)
 
         plot.plot(xl, yl)
-        plot.plot(xl, yl_r)
+        plot.plot(xl, yl_est)
         plot.xlabel('x, h = ' + str(best_h))
-        plot.ylabel(fnName + '(x), error = ' + str(h_error))
-        plot.title(kernelName)
+        plot.ylabel(fn_name + '(x), error = ' + str(h_error))
+        plot.title(kernel_name)
 
         return h_errors
 
