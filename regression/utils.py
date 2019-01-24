@@ -28,3 +28,15 @@ def make_errors(value, size, rate):
             errors.append(0)
 
     return errors
+
+
+def randomize_cols(matrix):
+    size = len(matrix[0])
+    randomized = np.asarray(random.sample(range(size), size))
+
+    new_m = None
+    for i in randomized:
+        col = matrix[:, i:i+1]
+        new_m = col if new_m is None else np.hstack((new_m, col))
+
+    return new_m
