@@ -11,6 +11,7 @@ def lowess_interactive(size, fn_name, stable_limit, error, error_rate):
     data = getattr(datasets, fn_name)(-3 * np.pi, 4 * np.pi, size, error, rate=error_rate)
     xl, yl = data['xl'], data['yl']
 
+    plot.rcParams['figure.figsize'] = (15, 6)
     plot.plot(xl, yl)
     plot.xlabel('x')
     plot.ylabel(fn_name + '(x)')
