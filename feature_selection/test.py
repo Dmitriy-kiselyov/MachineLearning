@@ -8,16 +8,17 @@ from feature_selection.data import count_error, feature_count
 def log(message, result):
     print(message)
     print("Количество ошибок: ", result["error"])
+    print("Количество признаков: ", len(result["features"]))
     print("Признаки: ", np.asarray(result["features"]))
     print("-------------------------------------------")
 
 
 features_all = list(range(feature_count))
-print("Полный набор признаков", {
+log("Полный набор признаков", {
     "error": count_error(features_all),
     "features": features_all
 })
 
-print("Алгоритм ADD", selection_add())
+log("Алгоритм ADD", selection_add())
 
-print("Алгоритм DEL", selection_del())
+log("Алгоритм DEL", selection_del())
