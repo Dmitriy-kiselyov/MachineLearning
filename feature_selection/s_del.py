@@ -1,13 +1,13 @@
 from feature_selection.data import count_error, feature_count
 
 
-def selection_del():
-    features_all = list(range(feature_count))
-
-    result = {
-        "error": count_error(features_all),
-        "features": features_all
-    }
+def selection_del(result=None):
+    if result is None:
+        features_all = list(range(feature_count))
+        result = {
+            "error": count_error(features_all),
+            "features": features_all
+        }
 
     while len(result["features"]) > 1:
         result_cur = result

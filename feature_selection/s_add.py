@@ -1,11 +1,12 @@
 from feature_selection.data import count_error, feature_count
 
 
-def selection_add():
-    result = {
-        "error": 9999,
-        "features": []
-    }
+def selection_add(result=None):
+    if result is None:
+        result = {
+            "error": 9999,
+            "features": []
+        }
 
     while True:
         result_cur = result

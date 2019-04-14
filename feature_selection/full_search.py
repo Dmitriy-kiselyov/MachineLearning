@@ -3,7 +3,7 @@ from itertools import combinations
 from feature_selection.data import count_error, feature_count
 
 
-def feat_gen(count):
+def __feat_gen(count):
     for c in range(1, count + 1):
         arr = list(range(count))
         comb = combinations(arr, c)
@@ -11,18 +11,19 @@ def feat_gen(count):
         yield from comb
 
 
-result = []
+def selection_full_search():
+    result = {
+        "error": 9999,
+        "features": []
+    }
 
-for feat_cur in feat_gen(feature_count):
-    error = count_error(feat_cur)
-    result.append({
-        "error": error,
-        "features": feat_cur
-    })
+    for feat_cur in __feat_gen(feature_count):
+        error = count_error(feat_cur)
 
-result.sort(key=lambda e: e["error"])
+        if error < result["error"]:
+            result = {
+                "error": error,
+                "features": feat_cur
+            }
 
-for res in result:
-    print("Features: ", res["features"])
-    print("Error: ", res["error"])
-    print("----------------------------")
+    return result
