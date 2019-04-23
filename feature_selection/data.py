@@ -1,12 +1,11 @@
-from sklearn import datasets
 from sklearn.naive_bayes import GaussianNB
 
-dataset = datasets.load_breast_cancer()
-# feature_count = len(dataset.data[0])
-feature_count = 10
+
+def get_feature_count(dataset):
+    return len(dataset.data[0])
 
 
-def count_error(features):
+def count_error(dataset, features):
     data = dataset.data[:, features]
 
     gnb = GaussianNB()

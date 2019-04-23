@@ -1,6 +1,6 @@
 from itertools import combinations
 
-from feature_selection.data import count_error, feature_count
+from feature_selection.data import count_error, get_feature_count
 
 
 def __feat_gen(count):
@@ -11,14 +11,15 @@ def __feat_gen(count):
         yield from comb
 
 
-def selection_full_search():
+def selection_full_search(dataset):
+    feature_count = get_feature_count(dataset)
     result = {
         "error": 9999,
         "features": []
     }
 
     for feat_cur in __feat_gen(feature_count):
-        error = count_error(feat_cur)
+        error = count_error(dataset, feat_cur)
 
         if error < result["error"]:
             result = {

@@ -1,11 +1,12 @@
-from feature_selection.data import count_error, feature_count
+from feature_selection.data import count_error, get_feature_count
 
 
-def selection_del(result=None):
+def selection_del(dataset, result=None):
+    feature_count = get_feature_count(dataset)
     if result is None:
         features_all = list(range(feature_count))
         result = {
-            "error": count_error(features_all),
+            "error": count_error(dataset, features_all),
             "features": features_all
         }
 
@@ -16,7 +17,7 @@ def selection_del(result=None):
             features = result["features"][:]
             features.remove(feat)
 
-            error = count_error(features)
+            error = count_error(dataset, features)
             if error <= result_cur["error"]:
                 result_cur = {
                     "error": error,
