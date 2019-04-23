@@ -60,6 +60,10 @@ jupyter nbextension enable --py widgetsnbextension
 
 Также содержит интерактивный пример в конце файла.
 
+### Отбор признаков ###
+
+- [исполняемый код](feature_selection)
+- [пример](ipynb/feature_selection.ipynb)
 
 ### Другие работы
 
