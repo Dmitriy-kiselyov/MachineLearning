@@ -6,10 +6,11 @@ from feature_selection.s_del import selection_del
 from feature_selection.add_del import selection_add_del
 from feature_selection.data import count_error
 from feature_selection.full_search import selection_full_search
+from feature_selection.dfs import selection_dfs
 
 
 dataset = datasets.load_breast_cancer()
-feature_count = 12
+feature_count = 30
 dataset.data = dataset.data[:, :feature_count]
 
 
@@ -35,3 +36,5 @@ log("Алгоритм ADD", selection_add(dataset))
 log("Алгоритм DEL", selection_del(dataset))
 
 log("Алгоритм ADD-DEL", selection_add_del(dataset))
+
+log('Поиск в глубину', selection_dfs(dataset))
