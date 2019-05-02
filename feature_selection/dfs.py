@@ -5,12 +5,14 @@ def selection_dfs(dataset):
     feature_count = get_feature_count(dataset)
     features = __sort_features(dataset)
 
+    logs = []
     results = list(map(lambda x: {"error": 9999, "features": []}, range(feature_count + 1)))
 
-    __increase([], features, results, dataset)
+    __increase([], features, results, dataset, logs)
 
     result = min(results, key=lambda x: x["error"])
     result["features"] = sorted(__flatten_features(result["features"]))
+    result["log"] = logs
 
     return result
 
@@ -22,10 +24,16 @@ def __sort_features(dataset):
     return list(map(lambda f, pos: {"i": f["i"], "pos": pos}, features_sorted, range(feature_count)))
 
 
-def __increase(features_cur, features, results, dataset):
+def __increase(features_cur, features, results, dataset, logs):
     length = len(features_cur)
     result = results[length]
     error = count_error(dataset, __flatten_features(features_cur)) if length != 0 else 9999
+
+    if error != 9999:
+        logs.append({
+            "error": error,
+            "feature_count": length
+        })
 
     for j in range(length):
         if results[j]["error"] < error:
@@ -38,7 +46,7 @@ def __increase(features_cur, features, results, dataset):
     max_feature = __max_feature_pos(features_cur)
     for feature in features:
         if feature["pos"] > max_feature:
-            __increase(features_cur + [feature], features, results, dataset)
+            __increase(features_cur + [feature], features, results, dataset, logs)
 
 
 def __flatten_features(features):

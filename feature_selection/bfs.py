@@ -3,9 +3,11 @@ from feature_selection.data import count_error, get_feature_count
 
 def selection_bfs(dataset, iter_limit=1):
     feature_count = get_feature_count(dataset)
+    logs = []
     result_best = {
         "error": 9999,
-        "features": []
+        "features": [],
+        "log": logs
     }
 
     result = list(map(lambda i: {"features": [i]}, range(feature_count)))
@@ -13,6 +15,11 @@ def selection_bfs(dataset, iter_limit=1):
     for iteration in range(1, feature_count + 1):
         for res in result:
             res["error"] = count_error(dataset, res["features"])
+
+            logs.append({
+                "error": res["error"],
+                "feature_count": len(res["features"])
+            })
 
         result.sort(key=lambda r: r["error"])
 
@@ -34,5 +41,6 @@ def selection_bfs(dataset, iter_limit=1):
         result = result_new
 
     result_best["features"].sort()
+    result_best["log"] = logs
 
     return result_best
