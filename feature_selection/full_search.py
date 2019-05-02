@@ -13,18 +13,26 @@ def __feat_gen(count):
 
 def selection_full_search(dataset):
     feature_count = get_feature_count(dataset)
+    log = []
     result = {
         "error": 9999,
-        "features": []
+        "features": [],
+        "log": log
     }
 
     for feat_cur in __feat_gen(feature_count):
         error = count_error(dataset, feat_cur)
 
+        log.append({
+            "error": error,
+            "feature_count": len(feat_cur)
+        })
+
         if error < result["error"]:
             result = {
                 "error": error,
-                "features": feat_cur
+                "features": feat_cur,
+                "log": log
             }
 
     return result

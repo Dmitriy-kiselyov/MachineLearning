@@ -3,9 +3,11 @@ from feature_selection.s_del import selection_del
 
 
 def selection_add_del(dataset):
+    log = []
     result = {
         "error": 9999,
-        "features": []
+        "features": [],
+        "log": log
     }
 
     while True:
