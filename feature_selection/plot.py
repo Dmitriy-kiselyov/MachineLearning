@@ -13,7 +13,7 @@ def make_plot(dataset, result):
 
     __set_labels()
 
-    __plot_all(logs, feature_count)
+    __plot_all(dataset, logs, feature_count)
     __plot_best_in_col(logs, feature_count)
     __plot_best(result)
 
@@ -30,13 +30,15 @@ def make_compare_plot(dataset, result, draw_ticks=False, **kwargs):
     if draw_ticks:
         __draw_x_ticks(feature_count)
 
-    __plot_best_in_col(logs, feature_count, **kwargs)
+    y_ticks = __plot_best_in_col(logs, feature_count, **kwargs)
     __plot_best(result, **kwargs)
+
+    plot.yticks(y_ticks, __make_quality_tick_labels(dataset, y_ticks))
 
 
 def __set_labels():
     plot.xlabel("Количество признаков")
-    plot.ylabel("Ошибка выборки")
+    plot.ylabel("Качество алгортима")
 
 
 def __draw_x_ticks(feature_count):
@@ -48,17 +50,18 @@ def __draw_x_ticks(feature_count):
         plot.axvline(x, linestyle='--', linewidth=1)
 
 
-def __plot_all(logs, feature_count):
+def __plot_all(dataset, logs, feature_count):
     xl = list(map(lambda log: log["feature_count"], logs))
     yl = list(map(lambda log: log["error"], logs))
 
     plot.xticks(range(1, feature_count + 1))
-    plot.yticks(__make_y_ticks(logs))
+    y_ticks = __make_y_ticks(logs)
+    plot.yticks(y_ticks, __make_quality_tick_labels(dataset, y_ticks))
 
     plot.plot(xl, yl, 'o', markerfacecolor='none')
 
 
-def __plot_best_in_col(logs, feature_count, linestyle='-', color='red', linewidth=2):
+def __plot_best_in_col(logs, feature_count, linestyle='-', color='red', linewidth=2, label=""):
     xl = range(1, feature_count + 1)
     yl = [None] * feature_count
 
@@ -70,7 +73,9 @@ def __plot_best_in_col(logs, feature_count, linestyle='-', color='red', linewidt
             yl[feature_count - 1] = error
 
     plot.plot(xl, yl, 'o', color=color)
-    plot.plot(xl, yl, linestyle=linestyle, color=color, linewidth=linewidth)
+    plot.plot(xl, yl, linestyle=linestyle, color=color, linewidth=linewidth, label=label)
+
+    return list(filter(lambda x: x is not None, yl))
 
 
 def __plot_best(result, color='red', **kwargs):
@@ -93,3 +98,15 @@ def __make_y_ticks(logs, height=480-110, tick_height=10):
             gapped_yl.append(y)
 
     return gapped_yl
+
+
+def __make_quality_tick_labels(dataset, ticks):
+    return list(map(lambda error: __make_quality_tick_label(dataset, error), ticks))
+
+
+def __make_quality_tick_label(dataset, error):
+    total = len(dataset.data)
+    quality = len(dataset.data) - error
+    percent = round(quality / total, 4)
+
+    return percent

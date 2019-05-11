@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn import datasets
+import time
 
 from feature_selection.s_add import selection_add
 from feature_selection.s_del import selection_del
@@ -15,29 +16,57 @@ feature_count = 30
 dataset.data = dataset.data[:, :feature_count]
 
 
-def log(message, result):
+def measure_time(func):
+    start = time.process_time()
+    result = func()
+    elapsed = int((time.process_time() - start) * 1000)
+
+    print("Время работы:", "{:,}".format(elapsed).replace(",", " "), "мс")
+
+    return result
+
+
+def log_quality(result):
+    error = result["error"]
+    total = len(dataset.data)
+    quality = round((total - error) / total * 100, 2)
+
+    print("Качество алгоритма:", str(quality) + "%")
+
+
+def log_features(result):
+    features = np.asarray(result["features"])
+    names = dataset.feature_names
+
+    print("Признаки: ", list(map(lambda i: str(i) + " – " + names[i], features)))
+
+
+def log(message, func):
     print(message)
-    print("Количество ошибок: ", result["error"])
+
+    result = measure_time(func)
+    print("Количество ошибок:", result["error"])
+    log_quality(result)
     print("Количество признаков: ", len(result["features"]))
-    print("Признаки: ", np.asarray(result["features"]))
+    log_features(result)
     print("-------------------------------------------")
 
 
 features_all = list(range(feature_count))
-log("Полный набор признаков", {
+log("Полный набор признаков", lambda: {
     "error": count_error(dataset, features_all),
     "features": features_all
 })
 
 if feature_count <= 15:
-    log("Полный перебор", selection_full_search(dataset))
+    log("Полный перебор", lambda: selection_full_search(dataset))
 
-log("Алгоритм ADD", selection_add(dataset))
+log("Алгоритм ADD", lambda: selection_add(dataset))
 
-log("Алгоритм DEL", selection_del(dataset))
+log("Алгоритм DEL", lambda: selection_del(dataset))
 
-log("Алгоритм ADD-DEL", selection_add_del(dataset))
+log("Алгоритм ADD-DEL", lambda: selection_add_del(dataset))
 
-log('Поиск в глубину', selection_dfs(dataset))
+log('Поиск в глубину', lambda: selection_dfs(dataset))
 
-log('Поиск в ширину', selection_bfs(dataset, iter_limit=10))
+log('Поиск в ширину', lambda: selection_bfs(dataset, iter_limit=10))
