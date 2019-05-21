@@ -26,34 +26,60 @@ def show_2_features():
 
 # show_2_features()
 
-def get_compressed_str(i, main=None):
+def get_compressed(feat, main=None):
     classes = list(map(lambda i: colors[i], iris.target))
     if main:
         classes = set_main_class(classes, main)
 
-    features = iris.data[:, i]
+    features = iris.data[:, feat]
     bind = list(map(lambda f, c: {"feat": f, "class": c}, features, classes))
     bind.sort(key=lambda b: b["feat"])
-    comp = compress_by_class(bind)
 
-    return compress_to_class_str(comp)
+    return compress_by_class(bind)
 
 
-print(get_compressed_str(1))
-print(get_compressed_str(1, 'b'))
+def get_compressed_str(feat, main=None):
+    return compress_to_class_str(get_compressed(feat, main))
 
-P_arr = [0, 41, 3, 1, 0]
-N_arr = [50, 0, 1, 1, 44]
-P = sum(P_arr)
-N = sum(N_arr)
 
-p = 0
-n = 0
+best_gain = {
+    "gain": 0,
+    "feat": -1,
+    "value": 0,
+    "class": "✘"
+}
 
-print("P =", P, "; N =", N)
+def find_best_gain(feat, main):
+    global best_gain
 
-for i in range(len(P_arr) - 1):
-    p += P_arr[i]
-    n += N_arr[i]
+    main_i = colors.index(main)
+    P = sum(iris.target == main_i)
+    N = len(iris.target) - P
 
-    print("p =", p, "; n =", n, " ; gain =", gain(P, N, p, n))
+    print(get_compressed_str(feat, main))
+
+    comp = get_compressed(feat, main)
+    p, n = 0, 0
+
+    for i in range(len(comp) - 1):
+        p += comp[i]["class"].get("✔", 0)
+        n += comp[i]["class"].get("✘", 0)
+
+        g = gain(P, N, p, n)
+
+        if g > best_gain["gain"]:
+            best_gain = {
+                "gain": g,
+                "feat": feat,
+                "value": comp[i]["feat_to"],
+                "class": main
+            }
+
+        # print("p =", p, " n =", n, " gain =", gain(P, N, p, n))
+
+
+for feat in range(2):
+    for color in colors:
+        find_best_gain(feat, color)
+
+print("BEST", best_gain)
