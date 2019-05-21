@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def remove_same(dataset):
+def remove_conflicts(dataset):
     data, target = dataset.data, dataset.target
 
     remove = []
@@ -14,3 +14,7 @@ def remove_same(dataset):
 
     dataset.data = np.delete(data, remove, axis=0)
     dataset.target = np.delete(target, remove)
+
+
+def set_main_class(target, main):
+    return list(map(lambda t: "✔" if t == main else "✘", target))
