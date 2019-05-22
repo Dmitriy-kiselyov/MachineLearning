@@ -18,3 +18,7 @@ def remove_conflicts(dataset):
 
 def set_main_class(target, main):
     return list(map(lambda t: "✔" if t == main else "✘", target))
+
+
+def get_feature_count(dataset):
+    return len(dataset.data[0])
