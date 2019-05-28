@@ -12,8 +12,12 @@ def remove_conflicts(dataset):
                 remove.append(i)
                 remove.append(j)
 
-    dataset.data = np.delete(data, remove, axis=0)
-    dataset.target = np.delete(target, remove)
+    remove_from_dataset(dataset, remove)
+
+
+def remove_from_dataset(dataset, remove_list):
+    dataset.data = np.delete(dataset.data, remove_list, axis=0)
+    dataset.target = np.delete(dataset.target, remove_list)
 
 
 def set_main_class(target, main):

@@ -42,18 +42,17 @@ def find_best_gain(dataset, log=False):
             N = len(dataset.target) - P
 
             comp = __get_compressed(dataset, feat, main)
-            p, n = 0, 0
 
             if log:
                 print("F =", feat, ", C =", main, ";", compress_to_class_str(comp))
 
-            for i in range(len(comp) - 1):
-                p += comp[i]["class"].get("✔", 0)
-                n += comp[i]["class"].get("✘", 0)
+            for i in range(len(comp)):
+                p = comp[i]["class"].get("✔", 0)
+                n = comp[i]["class"].get("✘", 0)
 
                 g = gain(P, N, p, n)
 
-                if g > best_gain["gain"]:
+                if g > best_gain["gain"] or (best_gain["gain"] == 0 and g == 0):
                     best_gain = {
                         "gain": g,
                         "feat": feat,
