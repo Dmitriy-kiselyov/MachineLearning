@@ -70,3 +70,18 @@ def compress_by_class(bind):
 
 def compress_to_class_str(comp):
     return " ".join(__compact(c["class"]) for c in comp)
+
+
+def distribute(comp):
+    comp[0]["feat_from"] = -float('inf')
+    comp[len(comp) - 1]["feat_to"] = float('inf')
+
+    for i in range(1, len(comp)):
+        prev = comp[i - 1]
+        cur = comp[i]
+
+        mid_value = (prev["feat_to"] + cur["feat_from"]) / 2
+        prev["feat_to"] = mid_value
+        cur["feat_from"] = mid_value
+
+    return comp

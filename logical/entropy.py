@@ -1,7 +1,7 @@
 from math import log2
 
 from logical.data import set_main_class
-from logical.compress import compress_by_class, compress_to_class_str
+from logical.compress import compress_by_class, compress_to_class_str, distribute
 from logical.data import get_feature_count
 
 
@@ -50,6 +50,9 @@ def find_best_gain(dataset, log=False):
                 p = comp[i]["class"].get("✔", 0)
                 n = comp[i]["class"].get("✘", 0)
 
+                if n > p:
+                    continue
+
                 g = gain(P, N, p, n)
 
                 if g > best_gain["gain"] or (best_gain["gain"] == 0 and g == 0):
@@ -75,4 +78,4 @@ def __get_compressed(dataset, feat, main=None):
     bind = list(map(lambda f, c: {"feat": f, "class": c}, features, classes))
     bind.sort(key=lambda b: b["feat"])
 
-    return compress_by_class(bind)
+    return distribute(compress_by_class(bind))
