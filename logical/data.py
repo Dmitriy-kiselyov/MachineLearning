@@ -1,6 +1,14 @@
 import numpy as np
 
 
+def prepare(dataset, features, classes):
+    dataset.data = dataset.data[:, features]
+    remove_conflicts(dataset)
+    dataset.target = list(map(lambda t: classes[t], dataset.target))
+
+    return dataset
+
+
 def remove_conflicts(dataset):
     data, target = dataset.data, dataset.target
 
