@@ -91,3 +91,7 @@ for n in range(1, len(gains) + 1):
         draw_gain(gains[i], order=n-i)
 
     plot.show()
+
+print('Список:')
+for p in predicates:
+    print(p.to_str())
