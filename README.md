@@ -65,6 +65,11 @@ jupyter nbextension enable --py widgetsnbextension
 - [исполняемый код](feature_selection)
 - [пример](ipynb/feature_selection.ipynb)
 
+### Логические алгоритмы ###
+
+- [исполняемый код (решающий список)](logical/decision_list.py)
+- [пример](ipynb/logical.ipynb)
+
 ### Другие работы
 
 Другие работы по машинному обучению смотрите в
